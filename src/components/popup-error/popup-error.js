@@ -1,36 +1,37 @@
-import { Component } from 'react';
+import { useState, useEffect, forwardRef, useImperativeHandle, useRef } from 'react';
 
 import popupSound from "./erro.mp3";
-import './popup-error.css'
+import './popup-error.sass'
 
-class Popup extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isPopupVisible: false,
-            textError: ``
-        };
+const Popup = forwardRef((props, ref) => {
+    const [isPopupVisible, setIsPopupVisible] = useState(false);
+    const [textError, setTextError] = useState(``)
+    const popupAudioRef = useRef(new Audio(popupSound));
 
-        this.popupAudio = new Audio(popupSound);
-    }
+    useEffect(() => {
+        if (isPopupVisible) {
+            popupAudioRef.current.play();
 
-    showPopup = (textError) => {
-        this.setState({ isPopupVisible: true, textError: textError });
+            setTimeout(() => {
+                hidePopup();
+                popupAudioRef.current.pause();
+                popupAudioRef.current.currentTime = 0;
+            }, 2000);
+        }
+    }, [isPopupVisible])
 
-        this.popupAudio.play();
+    useImperativeHandle(ref, () => ({
+        showPopup(errorText) {
+            setIsPopupVisible(true);
+            setTextError(errorText);
+        }
+    }))
 
-        setTimeout(() => {
-            this.hidePopup();
-            this.popupAudio.pause();
-            this.popupAudio.currentTime = 0;
-        }, 2000);
+    const hidePopup = () => {
+        setIsPopupVisible(false);
     };
 
-    hidePopup = () => {
-        this.setState({ isPopupVisible: false });
-    };
-
-    openFullScreen = () => {
+    const openFullScreen = () => {
         if (document.documentElement.requestFullscreen) {
             document.documentElement.requestFullscreen();
         } else if (document.documentElement.mozRequestFullScreen) { // Firefox
@@ -42,32 +43,25 @@ class Popup extends Component {
         }
     };
 
+    return (
+        <>
+            {isPopupVisible && (
+                <div className="popup">
+                    <p id="errorMessage">Oh shit!! <span id='errorMessageClose' className="material-symbols-outlined">close</span></p>
 
-
-    render() {
-        const { isPopupVisible, textError } = this.state;
-
-        return (
-            <>
-                {isPopupVisible && (
-                    <div className="popup">
-                        <p id="errorMessage">Oh shit!! <span id='errorMessageClose' className="material-symbols-outlined">close</span></p>
-
-                        <div >
-                            <span id="iconClose" className="material-symbols-outlined">close</span>
-                            <p id="errorDetails">{textError}</p>
-                        </div>
-                        <p id="errorDetails">Delete Windows?</p>
-                        <div id="buttonContainer">
-                            <button onClick={this.openFullScreen} id="errorButton">Yes</button>
-                        </div>
-
+                    <div >
+                        <span id="iconClose" className="material-symbols-outlined">close</span>
+                        <p id="errorDetails">{textError}</p>
                     </div>
+                    <p id="errorDetails">Delete Windows?</p>
+                    <div id="buttonContainer">
+                        <button onClick={openFullScreen} id="errorButton">Yes</button>
+                    </div>
+                </div>
 
-                )}
-            </>
-        )
-    }
-}
+            )}
+        </>
+    )
+})
 
 export default Popup;

@@ -1,21 +1,21 @@
-import { Component } from "react";
-
 import Popup from "../popup-error/popup-error";
 
-class ExportButton extends Component {
-    handleExportClick = () => {
+let showPopup;
+
+const ExportButton = () => {
+    const handleExportClick = () => {
         const dataToExport = localStorage.getItem('items');
 
         if (!dataToExport || dataToExport === '[]') {
-            this.showPopup(`Нема данних`);
+            showPopup(`Нема данних`);
             return;
         }
-        this.saveToFile(dataToExport);
+        saveToFile(dataToExport);
     };
 
-    saveToFile = (data) => {
+    const saveToFile = (data) => {
         const filename = Math.floor(Math.random() * 9999999) + '.json';
-        
+
         if (typeof data === 'object') {
             data = JSON.stringify(data, undefined, 4);
         }
@@ -33,20 +33,17 @@ class ExportButton extends Component {
         });
         a.dispatchEvent(e);
     };
-
-    render() {
-        return (
-            <>
-                <button className='form-btn'
-                    id="btn"
-                    onClick={this.handleExportClick}
-                    type="submit">
-                    <span>Експортувати список</span>
-                </button>
-                <Popup ref={(child) => { this.showPopup = child && child.showPopup; }} />
-            </>
-        );
-    }
+    return (
+        <>
+            <button className='form-btn'
+                id="btn"
+                onClick={handleExportClick}
+                type="submit">
+                <span>Зберегти список</span>
+            </button>
+            <Popup ref={(child) => { showPopup = child && child.showPopup; }} />
+        </>
+    );
 }
 
 export default ExportButton;

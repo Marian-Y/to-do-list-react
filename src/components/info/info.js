@@ -1,4 +1,4 @@
-import './info.css'
+import './info.sass'
 
 const Info = ({ numberOfListItems, numberOfImportant }) => {
     return (

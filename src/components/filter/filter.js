@@ -1,4 +1,4 @@
-import './filter.css';
+import './filter.sass';
 
 const Filter = (props) => {
     const buttondData = [

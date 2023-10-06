@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 
 import Info from '../info/info';
 import SearchPanel from '../search-panel/search-panel';
@@ -7,30 +7,22 @@ import ToDoList from '../to-do-list/to-do-list';
 import Form from '../form/form';
 import BrowserNotification from '../browser-notification/browser-notification';
 
-import './app.css';
+import './app.sass';
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            data: localStorage.getItem('items') ? JSON.parse(localStorage.getItem('items')) : [],
-            term: '',
-            filter: 'all',
-            // colorSelector: false
-        }
+const App = (props) => {
+    const [data, setData] = useState(
+        localStorage.getItem('items') ? JSON.parse(localStorage.getItem('items')) : []
+    );
+    const [term, setTerm] = useState('');
+    const [filter, setFilter] = useState('all');
+
+    const deleteItem = (id) => {
+        const newArr = data.filter(item => item.id !== id);
+        localStorage.setItem('items', JSON.stringify(newArr));
+        setData(newArr);
     }
 
-    deleteItem = (id) => {
-        this.setState(({ data }) => {
-            const newArr = data.filter(item => item.id !== id)
-            localStorage.setItem('items', JSON.stringify(newArr));
-            return {
-                data: newArr
-            }
-        })
-    }
-
-    addItem = (inputCase, inputDate, inputNotes, inputImage) => {
+    const addItem = (inputCase, inputDate, inputNotes, inputImage) => {
         const newItem = {
             inputCase,
             inputDate,
@@ -41,30 +33,31 @@ class App extends Component {
             color: `#E62C36`,
             triggered: false
         }
-        this.setState(({ data }) => {
-            const newArr = [...data, newItem];
-            localStorage.setItem('items', JSON.stringify(newArr));
-            return {
-                data: newArr
-            }
-        });
+        const newArr = [...data, newItem];
+        localStorage.setItem('items', JSON.stringify(newArr));
+        setData(newArr);
     }
 
-    onToggleProp  = (id, prop) => {
-        console.log(id, prop)
-        this.setState(({ data }) => ({
-            data: data.map(item => {
-                if (item.id === id) {
-                    return {...item, [prop]: !item[prop]}
+    const onToggleProp = (id, prop, value) => {
+        const updatedData = data.map(item => {
+
+            if (item.id === id) {
+                console.log(prop, value)
+                // value = prop === 'important' || prop === 'triggered' ? !item[prop] : value;
+                if (['important', 'triggered'].includes(prop)) {
+                    console.log(1);
+                    value = !item[prop];
                 }
-                return item;
-            })
-        }), () => {
-            localStorage.setItem('items', JSON.stringify(this.state.data));
-        })
-    }
+                return { ...item, [prop]: value };
+            }
+            return item;
+        });
+        setData(updatedData);
 
-    searchEmp = (items, term) => {
+        localStorage.setItem('items', JSON.stringify(updatedData));
+    };
+
+    const searchEmp = (items, term) => {
         if (term.length === 0) {
             return items;
         }
@@ -74,11 +67,11 @@ class App extends Component {
         })
     }
 
-    onUpdateSearch = (term) => {
-        this.setState({ term });
+    const onUpdateSearch = (term) => {
+        setTerm(term)
     }
 
-    filterPost = (items, filter) => {
+    const filterPost = (items, filter) => {
         switch (filter) {
             case 'important':
                 return items.filter(item => item.important);
@@ -96,62 +89,44 @@ class App extends Component {
         }
     }
 
-    onFilterSelect = (filter) => {
-        this.setState({ filter });
-        // console.log(filter)
+    const onFilterSelect = (filter) => {
+        setFilter(filter)
     }
 
-    onColorChange = (id, color) => {
-        this.setState(prevState => ({
-            data: prevState.data.map(item => {
-                if (item.id === id) {
-                    return { ...item, color: color };
-                }
-                return item;
-            })
-        }), () => {
-            localStorage.setItem('items', JSON.stringify(this.state.data));
-        });
-    }
-
-    updateData = () => {
-        // При завантаженні компонента витягніть дані із локального сховища та оновіть стан компонента
+    const updateData = () => {
         const storedData = localStorage.getItem('items');
         if (storedData) {
             const parsedData = JSON.parse(storedData);
-            this.setState({ data: parsedData });
+            setData(parsedData);
         }
     }
 
-    render() {
-        const { data, term, filter } = this.state;
-        const numberOfListItems = this.state.data.length;
-        const numberOfImportant = this.state.data.filter(item => item.important).length;
-        const visibleData = this.filterPost(this.searchEmp(data, term), filter);
+    const numberOfListItems = data.length;
+    const numberOfImportant = data.filter(item => item.important).length;
+    const visibleData = filterPost(searchEmp(data, term), filter);
 
-        return (
-            <div id="toDoList">
-                <Info numberOfListItems={numberOfListItems}
-                    numberOfImportant={numberOfImportant} />
-                <Form onAdd={this.addItem}
-                    data={data}
-                    updateData={this.updateData} />
+    return (
+        <div id="toDoList">
 
-                <div id="search-panel">
-                    <SearchPanel onUpdateSearch={this.onUpdateSearch} />
-                    <Filter filter={filter} onFilterSelect={this.onFilterSelect} />
-                </div>
+            <Info numberOfListItems={numberOfListItems}
+                numberOfImportant={numberOfImportant} />
+            <Form onAdd={addItem}
+                data={data}
+                updateData={updateData} />
 
-                <ToDoList
-                    data={visibleData}
-                    onDelete={this.deleteItem}
-                    onToggleProp ={this.onToggleProp}
-                    onColorChange={this.onColorChange}
-                />
-                <BrowserNotification data={data} onToggleProp ={this.onToggleProp}/>
+            <div id="search-panel">
+                <SearchPanel onUpdateSearch={onUpdateSearch} />
+                <Filter filter={filter} onFilterSelect={onFilterSelect} />
             </div>
-        )
-    }
+
+            <ToDoList
+                data={visibleData}
+                onDelete={deleteItem}
+                onToggleProp={onToggleProp}
+            />
+            <BrowserNotification data={data} onToggleProp={onToggleProp} />
+        </div>
+    )
 }
 
 export default App;

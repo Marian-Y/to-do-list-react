@@ -1,31 +1,30 @@
-import { Component } from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react"
 
 import Popup from "../popup-error/popup-error";
 
-class ReplayControl extends Component {
+const ReplayControl = forwardRef((props, ref) => {
+    const refPopup = useRef();
 
-    replayControl = (inputCase, inputDate, inputNotes, inputImage) => {
-        const content = this.props.data;
+    useImperativeHandle(ref, () => ({
 
-        const filteredElements = content.filter(item => item.inputCase === inputCase && item.inputDate === inputDate);
+        replayControl(inputCase, inputDate, inputNotes, inputImage){
+            const content = props.data;
 
+            const filteredElements = content.filter(item => item.inputCase === inputCase && item.inputDate === inputDate);
 
-        if (filteredElements.length > 0) {
-            this.showPopup(`Така справа уже існує`)
-          } else {
-            this.props.onAdd(inputCase, inputDate, inputNotes, inputImage);
-          }     
+            if (filteredElements.length > 0) {
+                refPopup.current.showPopup(`Така справа уже існує`)
+            } else {
+                props.onAdd(inputCase, inputDate, inputNotes, inputImage);
+            }
+        }
+    }))
 
-    }
-
-    render() {
-        
-        return (
-            <>
-                <Popup ref={(child) => { this.showPopup = child && child.showPopup; }} />
-            </>
-        )
-    }
-}
+    return (
+        <>
+            <Popup ref={refPopup} />
+        </>
+    )
+})
 
 export default ReplayControl
