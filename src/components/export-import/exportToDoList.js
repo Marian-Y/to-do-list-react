@@ -48,7 +48,6 @@ const ExportButton = () => {
                 <span>Зберегти список</span>
             </button>
             <div id="errorCase"><span>{errorCase}</span></div>
-            {/* <Popup ref={(child) => { showPopup = child && child.showPopup; }} /> */}
         </>
     );
 }
