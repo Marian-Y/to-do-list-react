@@ -9,12 +9,23 @@ import './form.sass'
 
 const Form = (props) => {
     const ref = useRef();
+    const dateInputRef = useRef(null);
+
     const [state, setState] = useState({
         inputCase: '',
         inputDate: '',
         inputNotes: '',
         inputImage: '',
     });
+    const [error, setError] = useState({
+        errorCase: '',
+        errorTime: '',
+        errorAdd: '',
+    })
+
+    const handleDateInputClick = () => {
+        dateInputRef.current.showPicker();
+    };
 
     const onValueChange = (e) => {
         if (e.target.type === 'file') {
@@ -47,23 +58,63 @@ const Form = (props) => {
         })
     };
 
+    function currentDate(date) {
+        const pad = (num) => (num < 10 ? '0' : '') + num;
+        const inputDate = new Date(date);
+
+        if (isNaN(inputDate)) {
+            return '';
+        }
+
+        return `${pad(inputDate.getFullYear())}.${pad(inputDate.getMonth() + 1)}.${pad(inputDate.getDate())} ${pad(inputDate.getHours())}:${pad(inputDate.getMinutes())}`;
+    }
 
     const sendDataToValidation = (e) => {
         e.preventDefault();
 
-        const {inputCase, inputDate, inputNotes, inputImage} = state
+        const { inputCase, inputDate, inputNotes, inputImage, } = state
 
-        ref.current.validation(inputCase, inputDate, inputNotes, inputImage)
+        var now = currentDate(new Date()),
+            newFormatInputData = currentDate(inputDate),
+            newFormatCase = inputCase.trim(),
+            newFormatNotes = inputNotes.trim();
 
-        setState({
-            inputCase: '',
-            inputDate: '',
-            inputNotes: '',
-            inputImage: ''
-        });
+        console.log(errorCase == false)
+
+        switch (true) {
+            case newFormatCase === "":
+                setError({ errorCase: `Пусте поле: справа` });
+                break;
+            case newFormatCase.length >= 30:
+                setError({ errorCase: `Діє обмеження на 30 символів` });
+                break;
+            case newFormatInputData === "":
+                setError({ errorTime: `Пусте поле: початок виконнаня` });
+                break;
+            case newFormatInputData <= now:
+                setError({ errorTime: `Надто стара дата` });
+                break;
+            // case newFormat >= future:
+            //     console.log(`Планувати дальше ніж на рік не можна`)
+            //     break;
+            default:
+                const content = props.data;
+                const filteredElements = content.filter(item => item.inputCase === inputCase && item.inputDate === inputDate);
+
+                if (filteredElements.length > 0) {
+                    setError({ errorAdd: `Така справа уже існує` });
+                    return;
+                }
+                setState({ inputCase: '', inputDate: '', inputNotes: '', inputImage: '' });
+                setError({ errorCase: '', errorTime: '', errorAdd: '', })
+                props.onAdd(newFormatCase, inputDate, newFormatNotes, inputImage);
+
+                break;
+        }
     };
 
     const { inputCase, inputDate, inputNotes, inputImage } = state;
+    const { errorCase, errorTime, errorAdd } = error
 
     return (
         <div id="wrapper">
@@ -73,35 +124,39 @@ const Form = (props) => {
                 <input
                     type="input"
                     className="form__field"
-                    placeholder="case"
+                    id='case'
+                    // placeholder="case"
                     name="inputCase"
                     value={inputCase}
-                    id="case"
+                    style={{ borderBottomColor: errorCase ? 'red' : '' }}
                     required=""
                     onChange={onValueChange} />
                 <label htmlFor="case" className="form__label">Справа</label>
-                <div id="errorCase"></div>
+                <div id="errorCase"><span>{errorCase}</span></div>
             </div>
             <div className="form__group field">
                 <input
                     type="datetime-local"
                     className="form__field"
-                    placeholder="startOfExecution"
+                    // placeholder="startOfExecution"
                     name="inputDate"
                     value={inputDate}
                     id="startOfExecution"
                     min="2023-04-13T00:00"
                     max="9999-06-14T00:00"
                     required=""
+                    style={{ borderBottomColor: errorTime ? 'red' : '' }}
+                    ref={dateInputRef}
+                    onClick={handleDateInputClick}
                     onChange={onValueChange} />
                 <label htmlFor="startOfExecution" className="form__label">Початок виконання</label>
-                <div id="errorTime"></div>
+                <div id="errorTime"><span>{errorTime}</span></div>
             </div>
             <div className="form__group field">
                 <input
                     type="input"
                     className="form__field"
-                    placeholder="notes"
+                    // placeholder="notes"
                     name="inputNotes"
                     value={inputNotes}
                     required=''
@@ -129,7 +184,7 @@ const Form = (props) => {
                         type="file"
                         style={{ display: `none` }}
                         className="form__field"
-                        placeholder="image"
+                        // placeholder="image"
                         name="inputImage"
                         // value={inputImage}
                         required=''
@@ -148,12 +203,14 @@ const Form = (props) => {
             }
             <button className='form-btn '
                 id="btn"
+                style={{ background: `#e78200` }}
                 type="submit"
                 onClick={sendDataToValidation}>Додати</button>
-            <br />
+            <div id="errorAdd"><span>{errorAdd}</span></div>
+            {/* <br /> */}
             <ExportButton />
             <ImportButton updateData={props.updateData} />
-            <Validation ref={ref} data={props.data} onAdd={props.onAdd}/>
+            <Validation ref={ref} data={props.data} onAdd={props.onAdd} />
         </div>
     )
 }

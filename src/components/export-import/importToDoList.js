@@ -29,7 +29,7 @@ const ImportButton = (props) => {
                 onChange={handleFileChange}
                 style={{ display: 'none' }} />
             <button
-                className='form-btn'
+                className='form-btn form-btn-save'
                 id="btn"
                 onClick={handleImportClick}>
                 Загрузити список

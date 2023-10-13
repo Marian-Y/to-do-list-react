@@ -44,7 +44,7 @@ const Popup = forwardRef((props, ref) => {
     };
 
     return (
-        <>
+        <div >
             {isPopupVisible && (
                 <div className="popup">
                     <p id="errorMessage">Oh shit!! <span id='errorMessageClose' className="material-symbols-outlined">close</span></p>
@@ -60,7 +60,7 @@ const Popup = forwardRef((props, ref) => {
                 </div>
 
             )}
-        </>
+        </div>
     )
 })
 

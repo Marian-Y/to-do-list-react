@@ -3,11 +3,23 @@ import { Fragment, useState, } from 'react';
 import './to-do-list-item.sass'
 
 const Item = (props) => {
+    const [optionsSelector, setOptionsSelector] = useState(false)
     const [colorSelector, setColorSelector] = useState(false)
+
+    const onOptionsSelector = () => {
+        setOptionsSelector(!optionsSelector)
+        if (colorSelector === true) {
+            setColorSelector(!colorSelector)
+        }
+    }
 
     const onColorSelector = () => {
         setColorSelector(!colorSelector)
     }
+
+    // if(optionsSelector === false){
+    //     console.log(1)
+    // }
 
     const { inputCase, inputDate, inputNotes, inputImage,
         onDelete, onToggleProp,
@@ -19,16 +31,16 @@ const Item = (props) => {
         { name: `#FFFFFF`, label: `` },
         { name: `#18F2B2`, label: `` },
         { name: `#050f56`, label: `` },
-        { name: `#050f5600`, label: `` },
+        // { name: `#050f5600`, label: `` },
     ];
 
     const buttons = buttondData.map(({ name, label }, index) => {
         const active = color === name;
         const clazz = active ? ' active ' : ''
 
-        if (index % 2 === 1) {
-            var br = <br />
-        }
+        // if (index % 2 === 1) {
+        //     var br = <br />
+        // }
         return (
             <Fragment key={name}>
                 <button
@@ -41,10 +53,11 @@ const Item = (props) => {
                     }}>
                     <span className={`material-symbols-outlined doneIcon ${clazz}`}>done</span>
                 </button>
-                {br}
+                <br />
             </Fragment >
         )
     })
+
 
     return (
 
@@ -52,24 +65,33 @@ const Item = (props) => {
             id="7860501"
             style={{ background: color }}>
 
-            <div className="colorSelector">
-                <button onClick={onColorSelector} type="button" className='btnColorSelector'></button>
+            <p onClick={onToggleProp} data-toggle="important" className={(important ? "fa-solid " : "fa-regular ") + 'fa-star fa-rotate-90 fa-lg'}></p>
 
-                <div id="slideout"
-                    className={colorSelector ? 'on' : ''}
-                    style={{ background: color + `90` }}>
+            <button className='fa-solid fa-ellipsis fa-lg optionsSelector' onClick={onOptionsSelector}></button>
+
+            <div style={{ background: color + `90` }} id="slideout" className={optionsSelector ? 'on' : ''}>
+                {/* <button onClick={onColorSelector} type="button" className='btnColorSelector'></button> */}
+                {/* кольори  */}
+                <div id="slideout" className={colorSelector ? 'color' : ''} style={{ background: color + `90` }}>
                     {buttons}
                 </div>
+                {/* <br /> */}
                 <button
                     type="button"
-                    className="btn-trash btn-sm "
+                    className="btn-icon btn-sm "
+                    onClick={onColorSelector}>
+                    <i className="fa-solid fa-paint-roller fa-xl"></i>
+                </button>
+                <br />
+                <button
+                    type="button"
+                    className="btn-icon btn-sm "
                     onClick={onDelete}>
                     <i className="fas fa-trash fa-xl"></i>
-
                 </button>
             </div>
 
-            <p onClick={onToggleProp} data-toggle="important" className={(important ? "fa-solid " : "fa-regular ") + 'fa-star fa-rotate-90 fa-lg'}></p>
+
             <br />
             {inputImage && (
                 <img id='image' src={inputImage} alt='Щось пішло не так'></img>

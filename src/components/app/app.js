@@ -15,6 +15,7 @@ const App = (props) => {
     );
     const [term, setTerm] = useState('');
     const [filter, setFilter] = useState('all');
+    const [sortedAsc, setSortedAsc] = useState(true);
 
     const deleteItem = (id) => {
         const newArr = data.filter(item => item.id !== id);
@@ -43,8 +44,7 @@ const App = (props) => {
 
             if (item.id === id) {
                 console.log(prop, value)
-                // value = prop === 'important' || prop === 'triggered' ? !item[prop] : value;
-                if (['important', 'triggered'].includes(prop)) {
+                if (['important', 'triggered',].includes(prop)) {
                     console.log(1);
                     value = !item[prop];
                 }
@@ -71,23 +71,40 @@ const App = (props) => {
         setTerm(term)
     }
 
+    const handleSortedAsc = () => {
+        setSortedAsc(!sortedAsc);
+        console.log(`1`)
+    };
+    const handleSortedTrue = () => {
+        console.log(`2`)
+        setSortedAsc(true);
+    };
+
     const filterPost = (items, filter) => {
         switch (filter) {
             case 'important':
                 return items.filter(item => item.important);
             case 'inputDate':
                 const sortedArray = [...items];
-                console.log(sortedArray);
 
-                return sortedArray.sort((a, b) => {
+                sortedArray.sort((a, b) => {
                     const dateA = new Date(a.inputDate);
                     const dateB = new Date(b.inputDate);
-                    return dateA - dateB;
+
+                    if (sortedAsc) {
+                        console.log(1)
+                        return dateA - dateB; 
+                    } else {
+                        console.log(2)
+                        return dateB - dateA;
+                    }
                 });
+
+                return sortedArray;
             default:
-                return items
+                return items;
         }
-    }
+    };
 
     const onFilterSelect = (filter) => {
         setFilter(filter)
@@ -103,20 +120,21 @@ const App = (props) => {
 
     const numberOfListItems = data.length;
     const numberOfImportant = data.filter(item => item.important).length;
-    const visibleData = filterPost(searchEmp(data, term), filter);
+    const visibleData = filterPost(searchEmp(data, term), filter, sortedAsc);
 
     return (
         <div id="toDoList">
+            <div id='notAToDoList'>
+                <Info numberOfListItems={numberOfListItems}
+                    numberOfImportant={numberOfImportant} />
+                <Form onAdd={addItem}
+                    data={data}
+                    updateData={updateData} />
 
-            <Info numberOfListItems={numberOfListItems}
-                numberOfImportant={numberOfImportant} />
-            <Form onAdd={addItem}
-                data={data}
-                updateData={updateData} />
-
-            <div id="search-panel">
-                <SearchPanel onUpdateSearch={onUpdateSearch} />
-                <Filter filter={filter} onFilterSelect={onFilterSelect} />
+                <div id="search-panel">
+                    <SearchPanel onUpdateSearch={onUpdateSearch} />
+                    <Filter filter={filter} sortedAsc={sortedAsc} onFilterSelect={onFilterSelect} handleSortedAsc={handleSortedAsc} handleSortedTrue={handleSortedTrue} />
+                </div>
             </div>
 
             <ToDoList

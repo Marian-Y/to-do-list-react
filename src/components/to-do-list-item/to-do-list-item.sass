@@ -1,4 +1,4 @@
-.btn-trash
+.btn-icon
   border: none
   background: rgba(255, 0, 0, 0)
   border-radius: 15px
@@ -20,6 +20,12 @@
 .listli.important .fa-star
   background-color: #FFD700
 
+.optionsSelector
+  height: 19px
+  float: right
+  background: #ffffff00
+  border: none
+
 .doneIcon
   color: #ffffff
   opacity: 0
@@ -38,42 +44,44 @@
   background-size: cover
   padding: 0
   border: 0
-  width: 40px
-  height: 40px
+  width: 30px
+  height: 30px
   background-color: #00000000
 
 #slideout button
   border-radius: 100%
   border: none
   padding: 0
-  width: 40px
-  height: 40px
+  width: 30px
+  height: 30px
   margin: 5px
 
 #slideout
+  right: -41px
+  top: 0px
+  // display: none
   background: #e62c3699
   border-radius: 20px
   color: #333
-  transform: translate(-400px, 60px)
+  // transform: translate(600px, -40px)
   position: absolute
   -webkit-transition-duration: 0.3s
   -moz-transition-duration: 0.3s
   -o-transition-duration: 0.3s
   transition-duration: 0.3s
   opacity: 0
-
-#slideout form
-  display: block
-  padding: 20px
-
-#slideout textarea
-  display: block
-  height: 100px
-  margin-bottom: 6px
-  width: 250px
+  z-index: -1
 
 #slideout.on
-  transform: translate(-120px, -60px)
+  display: block
+  z-index: 1
+  // transform: translate(500px, -40px)
+  opacity: 1
+
+#slideout.color
+  display: block
+  z-index: 1
+  // transform: translate(51px, -52px)
   opacity: 1
 
 #liCase span

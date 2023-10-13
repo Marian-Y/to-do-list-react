@@ -41,18 +41,6 @@ const Validation = forwardRef((props, ref) => {
 
             var newFormat = inputDate;
 
-            function currentDate(newFormat) {
-                var pad = function (num) {
-                    return (num < 10 ? '0' : '') + num;
-                };
-
-                return pad(new Date(newFormat).getFullYear()) +
-                    '.' + pad(Number(new Date(newFormat).getMonth() + 1)) +
-                    '.' + pad(new Date(newFormat).getDate()) +
-                    ' ' + pad(new Date(newFormat).getHours()) +
-                    ':' + pad(new Date(newFormat).getMinutes());
-            }
-
             var newFormatCase = inputCase.trim(),
                 newFormatNotes = inputNotes.trim(),
                 newFormat = currentDate(newFormat);
@@ -83,7 +71,7 @@ const Validation = forwardRef((props, ref) => {
     return (
         <div>
             <Popup ref={refPopup} />
-            <ReplayControl ref={refReplayControl} data={props.data} onAdd={props.onAdd}/>
+            <ReplayControl ref={refReplayControl} data={props.data} onAdd={props.onAdd} />
         </div>
     );
 })

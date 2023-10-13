@@ -35,13 +35,13 @@ const ExportButton = () => {
     };
     return (
         <>
-            <button className='form-btn'
+            <button className='form-btn form-btn-save'
                 id="btn"
                 onClick={handleExportClick}
                 type="submit">
                 <span>Зберегти список</span>
             </button>
-            <Popup ref={(child) => { showPopup = child && child.showPopup; }} />
+            {/* <Popup ref={(child) => { showPopup = child && child.showPopup; }} /> */}
         </>
     );
 }
