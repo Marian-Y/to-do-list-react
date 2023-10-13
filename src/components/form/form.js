@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react';
 
-import Validation from './validation';
 import ExportButton from '../export-import/exportToDoList';
 import ImportButton from '../export-import/importToDoList';
 
@@ -8,7 +7,6 @@ import './form.sass'
 
 
 const Form = (props) => {
-    const ref = useRef();
     const dateInputRef = useRef(null);
 
     const [state, setState] = useState({
@@ -107,7 +105,7 @@ const Form = (props) => {
                 }
                 setState({ inputCase: '', inputDate: '', inputNotes: '', inputImage: '' });
                 setError({ errorCase: '', errorTime: '', errorAdd: '', })
-                props.onAdd(newFormatCase, inputDate, newFormatNotes, inputImage);
+                props.onAdd(newFormatCase, newFormatInputData, newFormatNotes, inputImage);
 
                 break;
         }
@@ -210,7 +208,6 @@ const Form = (props) => {
             {/* <br /> */}
             <ExportButton />
             <ImportButton updateData={props.updateData} />
-            <Validation ref={ref} data={props.data} onAdd={props.onAdd} />
         </div>
     )
 }
