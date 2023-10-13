@@ -77,20 +77,30 @@ const Form = (props) => {
             newFormatCase = inputCase.trim(),
             newFormatNotes = inputNotes.trim();
 
-        console.log(errorCase == false)
-
         switch (true) {
             case newFormatCase === "":
                 setError({ errorCase: `Пусте поле: справа` });
+                setTimeout(() => {
+                    setError({ errorCase: `` });
+                }, 3000);
                 break;
             case newFormatCase.length >= 30:
                 setError({ errorCase: `Діє обмеження на 30 символів` });
+                setTimeout(() => {
+                    setError({ errorCase: `` });
+                }, 3000);
                 break;
             case newFormatInputData === "":
                 setError({ errorTime: `Пусте поле: початок виконнаня` });
+                setTimeout(() => {
+                    setError({ errorTime: `` });
+                }, 3000);
                 break;
             case newFormatInputData <= now:
                 setError({ errorTime: `Надто стара дата` });
+                setTimeout(() => {
+                    setError({ errorTime: `` });
+                }, 3000);
                 break;
             // case newFormat >= future:
             //     console.log(`Планувати дальше ніж на рік не можна`)

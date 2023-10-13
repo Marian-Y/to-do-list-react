@@ -1,13 +1,19 @@
-// import Popup from "../popup-error/popup-error";
-
-let showPopup;
+import { useState } from "react";
 
 const ExportButton = () => {
+
+    const [errorCase, setErrorCase] = useState('');
+
     const handleExportClick = () => {
         const dataToExport = localStorage.getItem('items');
 
         if (!dataToExport || dataToExport === '[]') {
-            showPopup(`Нема данних`);
+            setErrorCase(`Нема данних`);
+
+            setTimeout(() => {
+                setErrorCase('');
+            }, 3000);
+            
             return;
         }
         saveToFile(dataToExport);
@@ -41,6 +47,7 @@ const ExportButton = () => {
                 type="submit">
                 <span>Зберегти список</span>
             </button>
+            <div id="errorCase"><span>{errorCase}</span></div>
             {/* <Popup ref={(child) => { showPopup = child && child.showPopup; }} /> */}
         </>
     );
