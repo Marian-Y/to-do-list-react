@@ -76,7 +76,7 @@ const Form = (props) => {
             newFormatInputData = currentDate(inputDate),
             newFormatCase = inputCase.trim(),
             newFormatNotes = inputNotes.trim();
-
+            
         switch (true) {
             case newFormatCase === "":
                 setError({ errorCase: `Пусте поле: справа` });
