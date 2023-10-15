@@ -31,8 +31,10 @@ const App = (props) => {
             inputImage,
             important: false,
             id: Math.floor(Math.random() * 9999999),
-            color: `#E62C36`,
-            triggered: false
+            color: `#f97600`,
+            triggered: false,
+            priority: `low`
+
         }
         const newArr = [...data, newItem];
         localStorage.setItem('items', JSON.stringify(newArr));
@@ -85,22 +87,29 @@ const App = (props) => {
             case 'important':
                 return items.filter(item => item.important);
             case 'inputDate':
-                const sortedArray = [...items];
+                const sortedArrayDate = [...items];
 
-                sortedArray.sort((a, b) => {
+                sortedArrayDate.sort((a, b) => {
                     const dateA = new Date(a.inputDate);
                     const dateB = new Date(b.inputDate);
 
-                    if (sortedAsc) {
-                        console.log(1)
-                        return dateA - dateB; 
-                    } else {
-                        console.log(2)
-                        return dateB - dateA;
-                    }
+                    const sort = dateA - dateB;
+
+                    return sortedAsc ? sort : -sort;
                 });
 
-                return sortedArray;
+                return sortedArrayDate;
+            case `priority`:
+                const sortedArrayPriority = [...items]
+
+                sortedArrayPriority.sort((a, b) => {
+                    const priorityOrder = { low: 1, medium: 2, high: 3 };
+                    const orderDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
+
+                    return sortedAsc ? orderDiff : -orderDiff;
+                })
+
+                return sortedArrayPriority
             default:
                 return items;
         }

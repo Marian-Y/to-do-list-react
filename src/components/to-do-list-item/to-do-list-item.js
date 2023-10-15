@@ -13,40 +13,33 @@ const Item = (props) => {
         }
     }
 
-    const onColorSelector = () => {
-        setColorSelector(!colorSelector)
+    const onToggleSelector = (selector) => {
+        if (selector === 'color') {
+            setColorSelector(!colorSelector);
+        }
     }
-
-    // if(optionsSelector === false){
-    //     console.log(1)
-    // }
 
     const { inputCase, inputDate, inputNotes, inputImage,
         onDelete, onToggleProp,
-        important, color, id } = props;
+        important, color, priority, id } = props;
 
-    const buttondData = [
+    const buttonColor = [
         { name: `#E62C36`, label: `` },
         { name: `#f97600`, label: `` },
         { name: `#FFFFFF`, label: `` },
         { name: `#18F2B2`, label: `` },
         { name: `#050f56`, label: `` },
-        // { name: `#050f5600`, label: `` },
     ];
 
-    const buttons = buttondData.map(({ name, label }, index) => {
+    const buttonsColor = buttonColor.map(({ name, label }, index) => {
         const active = color === name;
         const clazz = active ? ' active ' : ''
-
-        // if (index % 2 === 1) {
-        //     var br = <br />
-        // }
         return (
             <Fragment key={name}>
                 <button
                     type="button"
                     data-toggle="color"
-                    data-color={name}
+                    data-value={name}
                     onClick={onToggleProp}
                     style={{
                         backgroundColor: name
@@ -58,30 +51,60 @@ const Item = (props) => {
         )
     })
 
+    const buttonPriority = [
+        { name: `low`, label: ``, icon: ` low` },
+        { name: `medium`, label: ``, icon: ` medium` },
+        { name: `high`, label: ``, icon: ` high` },
+    ];
+
+    const buttonsPriority = buttonPriority.map(({ name, label, icon }, index) => {
+        const active = priority === name;
+        const clazz = active ? ' active' : '';
+
+        return (
+            <Fragment key={name}>
+                <button className={`priorityButton${clazz}${icon}`}
+                    type="button"
+                    data-toggle="priority"
+                    data-value={name}
+                    onClick={onToggleProp}
+                    style={{ backgroundColor: color }}
+                                       >
+                    <span>{label}</span>
+                </button>
+                <br />
+            </Fragment>
+        )
+    })
 
     return (
 
         <li className='listli'
-            id="7860501"
+            id={id}
             style={{ background: color }}>
 
             <p onClick={onToggleProp} data-toggle="important" className={(important ? "fa-solid " : "fa-regular ") + 'fa-star fa-rotate-90 fa-lg'}></p>
+            
+            <div id="selectorPriority">
+                {buttonsPriority}
+            </div>
 
             <button className='fa-solid fa-ellipsis fa-lg optionsSelector' onClick={onOptionsSelector}></button>
 
-            <div style={{ background: color + `90` }} id="slideout" className={optionsSelector ? 'on' : ''}>
+            <div style={{ background: color + `90` }} id="slideoutColor" className={optionsSelector ? 'on' : ''}>
                 {/* <button onClick={onColorSelector} type="button" className='btnColorSelector'></button> */}
-                {/* кольори  */}
-                <div id="slideout" className={colorSelector ? 'color' : ''} style={{ background: color + `90` }}>
-                    {buttons}
+                {/* кніпик з кольором  */}
+                <div id="slideoutColor" className={colorSelector ? 'color' : ''} style={{ background: color + `90` }}>
+                    {buttonsColor}
                 </div>
-                {/* <br /> */}
+                {/* відкрти колор селектор */}
                 <button
                     type="button"
                     className="btn-icon btn-sm "
-                    onClick={onColorSelector}>
-                    <i className="fa-solid fa-paint-roller fa-xl"></i>
+                    onClick={() => onToggleSelector('color')}>
+                    <i className="fa-solid fa-palette fa-xl"></i>
                 </button>
+                {/* СМЕРТЬ */}
                 <br />
                 <button
                     type="button"

@@ -4,13 +4,15 @@ const Filter = ({ filter, onFilterSelect, handleSortedAsc, handleSortedTrue, sor
     const buttondData = [
         { name: `all`, label: `Всі справи` },
         { name: `important`, label: `Важливі справи` },
-        { name: `inputDate`, label: ` По даті`}
+        { name: `inputDate`, label: ` По даті`},
+        { name: `priority`, label: ` По важливості`}
     ];
 
     const buttons = buttondData.map(({ name, label }) => {
         const active = filter === name;
         const clazz = active ? '' : 'btn-active'
-        const showIcon = active && name === 'inputDate';
+        const showIcon = active && (name === 'inputDate' || name === 'priority');
+        console.log(showIcon)
 
         return (
             <button
@@ -21,7 +23,8 @@ const Filter = ({ filter, onFilterSelect, handleSortedAsc, handleSortedTrue, sor
                 onClick={() => {
                     onFilterSelect(name);
 
-                    if (name === 'inputDate') {
+                    if (name === 'inputDate' || name === 'priority') {
+                        console.log(`qwe`)
                         handleSortedAsc();
                     } else {
                         handleSortedTrue();

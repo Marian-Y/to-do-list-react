@@ -20,6 +20,36 @@
 .listli.important .fa-star
   background-color: #FFD700
 
+#selectorPriority
+  top: 10px
+  left: 70px
+  position: absolute
+  // z-index: -1
+  transform: translateX(-100px)
+
+.priorityButton
+  height: 30px
+  width: 30px
+  border: none
+  border-radius: 23px 0 0 0 
+  // background-color: #ff0000da
+  background-size: contain
+  background-position: left
+  background-repeat: no-repeat
+  transition: transform 0.5s, width 0.5s
+
+.priorityButton.active
+  transform: translateX(-10px)
+  transition: transform 0.5s
+  width: 40px
+
+.low
+  background-image: url('../img/low-priority.png')
+.medium
+  background-image: url('../img/medium-priority.png')
+.high
+  background-image: url('../img/high-priority.png')
+  
 .optionsSelector
   height: 19px
   float: right
@@ -48,7 +78,7 @@
   height: 30px
   background-color: #00000000
 
-#slideout button
+#slideoutColor button
   border-radius: 100%
   border: none
   padding: 0
@@ -56,7 +86,7 @@
   height: 30px
   margin: 5px
 
-#slideout
+#slideoutColor
   right: -41px
   top: 0px
   // display: none
@@ -72,13 +102,13 @@
   opacity: 0
   z-index: -1
 
-#slideout.on
+#slideoutColor.on
   display: block
   z-index: 1
   // transform: translate(500px, -40px)
   opacity: 1
 
-#slideout.color
+#slideoutColor.color
   display: block
   z-index: 1
   // transform: translate(51px, -52px)

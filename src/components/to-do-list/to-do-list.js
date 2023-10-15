@@ -14,7 +14,7 @@ const ToDoList = ({ data, onDelete, onToggleProp}) => {
             {...itemProps}  
             id={id}
             onDelete={() => onDelete(id)}
-            onToggleProp={(e) => onToggleProp(id, e.currentTarget.getAttribute('data-toggle'), e.currentTarget.getAttribute('data-color') )}
+            onToggleProp={(e) => onToggleProp(id, e.currentTarget.getAttribute('data-toggle'), e.currentTarget.getAttribute('data-value') )}
             />
         )
     })
