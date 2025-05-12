@@ -1,6 +1,10 @@
+import { useRef } from "react";
+
 const ImportButton = (props) => {
+    const inputRef = useRef(null);
+
     const handleImportClick = () => {
-        document.getElementById('importFile').click();
+        inputRef.current.click();
     };
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -24,12 +28,13 @@ const ImportButton = (props) => {
             <input
                 type="file"
                 id="importFile"
+                ref={inputRef}
                 className="importFile"
                 accept=".json"
                 onChange={handleFileChange}
                 style={{ display: 'none' }} />
             <button
-                className='form-btn'
+                className='form-btn form-btn-save'
                 id="btn"
                 onClick={handleImportClick}>
                 Загрузити список
